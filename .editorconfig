@@ -83,6 +83,9 @@ dotnet_diagnostic.SA1509.severity = Warning
 # The parameter should begin on the line after the previous parameter
 dotnet_diagnostic.SA1115.severity = None
 
+# Code should not contain trailing whitespace
+dotnet_diagnostic.SA1028.severity = None
+
 # File name should match first type name
 dotnet_diagnostic.SA1649.severity = None
 
