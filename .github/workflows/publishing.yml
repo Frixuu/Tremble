@@ -1,0 +1,20 @@
+name: Publishing
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    name: Publish to NuGet
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: "6.0.x"
+      - name: Publish
+        uses: rohith/publish-nuget@v2
+        with:
+          PROJECT_FILE_PATH: Tremble.csproj
+          NUGET_KEY: ${{secrets.NUGET_API_KEY}}

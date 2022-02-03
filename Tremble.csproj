@@ -5,4 +5,8 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <PropertyGroup>
+    <Version>0.1.0-pre</Version>
+  </PropertyGroup>
+
 </Project>
