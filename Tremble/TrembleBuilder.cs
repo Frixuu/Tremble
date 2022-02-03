@@ -1,11 +1,13 @@
-using Tremble.Chat.Commands;
-using System.Linq;
 using System;
+using System.Diagnostics.CodeAnalysis;
+using System.Linq;
+using Tremble.Chat.Commands;
 
 namespace Tremble;
 
 public class TrembleBuilder
 {
+    
     public ITremble Build()
     {
         var types = AppDomain.CurrentDomain
