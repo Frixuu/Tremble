@@ -1,10 +1,13 @@
-name: Publish to NuGet
-on: [push]
+name: Publishing
+on:
+  push:
+    branches:
+      - main
 
 jobs:
   publish:
     runs-on: ubuntu-latest
-    name: build, pack & publish
+    name: Publish to NuGet
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-dotnet@v1
