@@ -20,3 +20,7 @@ dotnet_sort_system_directives_first = true
 
 [*.{xml,csproj,nuspec,resx}]
 indent_size = 2
+
+[*.yml]
+indent_style = space
+indent_size = 2
