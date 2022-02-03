@@ -2,7 +2,7 @@
 
 namespace Tremble;
 
-internal class Tremble
+internal class Tremble : ITremble
 {
     internal void Initialize()
     {
