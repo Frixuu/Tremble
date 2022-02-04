@@ -56,7 +56,7 @@ internal class Tremble : ITremble
         _twitchChatClient.Initialize(credentials, channels);
 
         _executors = _commandTypes.ToDictionary(
-            type => Reflections.GetAttributeOfType<CommandAttribute>(type)!.Literal.ToLowerInvariant(),
+            type => type.GetAttribute<CommandAttribute>()!.Literal.ToLowerInvariant(),
             type =>
             {
                 var command = _serviceProvider.GetService(type) as Command;
