@@ -40,7 +40,7 @@ public static class Reflections
     /// <param name="elementType">Type of the element queried for attributes.</param>
     /// <typeparam name="T">The type of the requested attribute.</typeparam>
     /// <returns>Requested attribute object, if type has an attribute attached.</returns>
-    public static T? GetAttributeOfType<T>(Type elementType)
+    public static T? GetAttribute<T>(this Type elementType)
         where T : Attribute
     {
         return Attribute.GetCustomAttribute(elementType, typeof(T)) as T;
