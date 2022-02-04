@@ -61,8 +61,11 @@ public class TrembleBuilder
         if (_oauth == null)
             throw BuilderException.NoOauth;
 
-        var commandTypes = Reflection.FindAllTypesAnnotatedWith<CommandAttribute>();
-        commandTypes.ForEach(type => _serviceCollection.TryAddSingleton(type));
+        var commandTypes = Reflections.FindTypesAnnotatedWith<CommandAttribute>();
+        foreach (var commandType in commandTypes)
+        {
+            _serviceCollection.TryAddSingleton(commandType);
+        }
 
         var client = new Tremble(_serviceCollection, commandTypes, _identity, _oauth);
         client.Initialize(_channelsToJoin);

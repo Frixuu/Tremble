@@ -21,19 +21,17 @@ internal class Tremble : ITremble
     private readonly IServiceCollection _serviceCollection;
     private IServiceProvider _serviceProvider;
 
-    private readonly IList<Type> _commandTypes;
+    private readonly IReadOnlyCollection<Type> _commandTypes;
     private Dictionary<string, ICommandExecutor> _executors = new();
     internal ITwitchClient? _twitchChatClient;
     private string _username;
     private string _oauth;
 
-    internal Tremble
-    (
+    internal Tremble(
         IServiceCollection serviceCollection,
-        IList<Type> commandTypes,
+        IReadOnlyCollection<Type> commandTypes,
         string username,
-        string oauth
-    )
+        string oauth)
     {
         _serviceCollection = serviceCollection;
         _commandTypes = commandTypes;
@@ -58,7 +56,7 @@ internal class Tremble : ITremble
         _twitchChatClient.Initialize(credentials, channels);
 
         _executors = _commandTypes.ToDictionary(
-            type => Reflection.GetAttributeOfType<CommandAttribute>(type)!.Literal.ToLowerInvariant(),
+            type => Reflections.GetAttributeOfType<CommandAttribute>(type)!.Literal.ToLowerInvariant(),
             type =>
             {
                 var command = _serviceProvider.GetService(type) as Command;
