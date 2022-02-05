@@ -1,5 +1,7 @@
 # Tremble
 
+![Nuget](https://img.shields.io/nuget/v/Tremble) ![GitHub](https://img.shields.io/github/license/Frixuu/Tremble)
+
 A high-level .NET 6 framework for creating your own private Twitch chatbots.
 
 ## Quickstart
