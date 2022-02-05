@@ -8,6 +8,8 @@
   <PropertyGroup>
     <Version>0.1.0-pre3</Version>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <RepositoryUrl>https://github.com/Frixuu/Tremble.git</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
   </PropertyGroup>
 
   <ItemGroup>
