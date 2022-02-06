@@ -19,11 +19,12 @@ namespace Tremble;
 internal class Tremble : ITremble
 {
     private readonly IServiceCollection _serviceCollection;
-    private IServiceProvider _serviceProvider;
-
     private readonly IReadOnlyCollection<Type> _commandTypes;
+
+    private IServiceProvider? _serviceProvider;
+
     private Dictionary<string, ICommandExecutor> _executors = new();
-    internal ITwitchClient? _twitchChatClient;
+    private ITwitchClient? _twitchChatClient;
     private string _username;
     private string _oauth;
 
@@ -41,10 +42,6 @@ internal class Tremble : ITremble
 
     internal void Initialize(List<string> channels)
     {
-        _serviceCollection.TryAddSingleton(new TwitchChat(this));
-        _serviceCollection.TryAddSingleton<TwitchChat>();
-        _serviceProvider = _serviceCollection.BuildServiceProvider();
-
         var credentials = new ConnectionCredentials(_username, _oauth);
         var clientOptions = new ClientOptions()
         {
@@ -54,12 +51,17 @@ internal class Tremble : ITremble
 
         _twitchChatClient = new TwitchClient(new WebSocketClient(clientOptions));
         _twitchChatClient.Initialize(credentials, channels);
+        var twitchChat = new TwitchChat(_twitchChatClient);
+        _serviceCollection.TryAddSingleton<ITwitchChat>(twitchChat);
+
+        // We're done! Let's build the service provider
+        _serviceProvider = _serviceCollection.BuildServiceProvider();
 
         _executors = _commandTypes.ToDictionary(
             type => type.GetAttribute<CommandAttribute>()!.Literal.ToLowerInvariant(),
             type =>
             {
-                var command = _serviceProvider.GetService(type) as Command;
+                var command = _serviceProvider!.GetService(type) as Command;
                 return new CommandExecutor(command!) as ICommandExecutor;
             });
 
@@ -89,16 +91,23 @@ internal class Tremble : ITremble
     /// </summary>
     public async Task Run()
     {
-        Task.Run(() => _twitchChatClient?.Connect()).ConfigureAwait(false).GetAwaiter();
-        while (true)
+        var success = _twitchChatClient?.Connect() ?? false;
+        var shutdown = new TaskCompletionSource();
+
+        // Handle SIGINT
+        Console.CancelKeyPress += (_, args) =>
         {
-            await Task.Delay(500);
-            var input = Console.ReadLine();
-            if (input == ":q")
-            {
-                _twitchChatClient?.Disconnect();
-                break;
-            }
-        }
+            args.Cancel = true;
+            shutdown.SetResult();
+        };
+
+        // Handle SIGTERM
+        AppDomain.CurrentDomain.ProcessExit += (_, _) =>
+        {
+            shutdown.SetResult();
+        };
+
+        await shutdown.Task;
+        _twitchChatClient?.Disconnect();
     }
 }

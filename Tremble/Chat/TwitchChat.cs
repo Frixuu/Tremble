@@ -1,16 +1,18 @@
+using TwitchLib.Client.Interfaces;
+
 namespace Tremble.Chat;
 
-public class TwitchChat
+internal class TwitchChat : ITwitchChat
 {
-    private readonly Tremble _tremble;
+    private readonly ITwitchClient _innerChatClient;
 
-    internal TwitchChat(Tremble tremble)
+    internal TwitchChat(ITwitchClient innerClient)
     {
-        _tremble = tremble;
+        _innerChatClient = innerClient;
     }
 
-    public void SendMessage(string where, string message)
+    public void SendMessage(string channel, string message)
     {
-        _tremble!._twitchChatClient!.SendMessage(where, message);
+        _innerChatClient.SendMessage(channel, message);
     }
 }

@@ -32,10 +32,10 @@ namespace HelloWorld;
 [Command("hello")]
 public class HelloCommand : Command
 {
-    private readonly TwitchChat _twitchChat;
+    private readonly ITwitchChat _twitchChat;
 
     // Important modules will get injected through constructor
-    public HelloCommand(TwitchChat twitchChat)
+    public HelloCommand(ITwitchChat twitchChat)
     {
         _twitchChat = twitchChat;
     }

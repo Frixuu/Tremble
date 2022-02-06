@@ -7,9 +7,9 @@ namespace HelloWorld;
 [Command("hello")]
 public class HelloCommand : Command
 {
-    private readonly TwitchChat _twitchChat;
+    private readonly ITwitchChat _twitchChat;
 
-    public HelloCommand(TwitchChat twitchChat)
+    public HelloCommand(ITwitchChat twitchChat)
     {
         _twitchChat = twitchChat;
     }
