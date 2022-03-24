@@ -6,7 +6,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Tremble.Chat;
 using Tremble.Chat.Commands;
-using Tremble.Chat.Commands.Attributes;
 using Tremble.Utilities;
 using TwitchLib.Client;
 using TwitchLib.Client.Interfaces;

@@ -1,6 +1,6 @@
 using System;
 
-namespace Tremble.Chat.Commands.Attributes;
+namespace Tremble.Chat.Commands;
 
 /// <summary>
 /// Marks a command for runtime discovery by Tremble.

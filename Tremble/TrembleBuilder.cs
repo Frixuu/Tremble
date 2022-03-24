@@ -1,19 +1,20 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Tremble.Chat.Commands;
-using Tremble.Chat.Commands.Attributes;
 using Tremble.Utilities;
 
 namespace Tremble;
 
+/// <summary>
+/// A helper for creating new Tremble apps.
+/// </summary>
 public class TrembleBuilder
 {
     private readonly IServiceCollection _serviceCollection;
 
-    private List<string> _channelsToJoin = new();
+    private readonly List<string> _channelsToJoin = new();
     private string? _identity;
     private string? _oauth;
 
@@ -38,6 +39,9 @@ public class TrembleBuilder
         return this;
     }
 
+    /// <summary>
+    /// Describes which channels should the bot connect to on startup.
+    /// </summary>
     public TrembleBuilder OnChannels(params string[] channels)
     {
         _channelsToJoin.AddRange(channels);
@@ -53,13 +57,25 @@ public class TrembleBuilder
         return this;
     }
 
-    public ITremble Build()
+    /// <summary>
+    /// This method checks whether a Tremble instance can be built.
+    /// If not, throws an appropriate exception.
+    /// </summary>
+    private void CheckStateIntegrity()
     {
         if (_identity == null)
             throw BuilderException.NoUsername;
 
         if (_oauth == null)
             throw BuilderException.NoOauth;
+    }
+
+    /// <summary>
+    /// Creates a new instance of a <see cref="Tremble"/> bot application.
+    /// </summary>
+    public ITremble Build()
+    {
+        CheckStateIntegrity();
 
         var commandTypes = Reflections.FindTypesAnnotatedWith<CommandAttribute>();
         foreach (var commandType in commandTypes)
@@ -67,7 +83,7 @@ public class TrembleBuilder
             _serviceCollection.TryAddSingleton(commandType);
         }
 
-        var client = new Tremble(_serviceCollection, commandTypes, _identity, _oauth);
+        var client = new Tremble(_serviceCollection, commandTypes, _identity!, _oauth!);
         client.Initialize(_channelsToJoin);
         return client;
     }
